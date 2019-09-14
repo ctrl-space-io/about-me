@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aboutme-service
+  labels:
+    app: aboutme
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: aboutme
+  type: NodePort

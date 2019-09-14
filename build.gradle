@@ -1,0 +1,39 @@
+buildscript {
+    dependencies {
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.1.8.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id "com.palantir.docker" version "0.22.1"
+    id 'java'
+}
+
+group = 'cs.io'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+task unpack(type: Copy) {
+    dependsOn bootJar
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into("build/dependency")
+}
+docker {
+//    name "${project.group}/${bootJar.baseName}"
+    name "ctrlspace/${bootJar.baseName}"
+    copySpec.from(tasks.unpack.outputs).into("dependency")
+    buildArgs(['DEPENDENCY': "dependency"])
+//    buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
+}

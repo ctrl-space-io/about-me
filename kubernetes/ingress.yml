@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: "Ingress"
+metadata:
+  name: "ctrl-space-ingress-prod"
+  namespace: "default"
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "ctrl-space-io-prod"
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              serviceName: aboutme-service
+              servicePort: 8080
+      host: aboutme.ctrl-space.io

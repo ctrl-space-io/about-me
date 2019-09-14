@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aboutme
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aboutme
+  template:
+    metadata:
+        labels:
+          app: aboutme
+    spec:
+      containers:
+        - name: aboutme
+          image: ctrlspace/aboutme:0.0.1-SNAPSHOT
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health
+
